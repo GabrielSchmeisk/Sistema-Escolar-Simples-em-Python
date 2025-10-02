@@ -6,17 +6,17 @@ import random                  # Importa random, utilizado para gerar RAs aleat�
 import string                  # Importa string, utilizado para gerar letras e números para o RA
 
 # --------------------- DICIONÁRIOS E FILAS --------------------- #
-alunos = {}         # Dicionário que guarda os alunos cadastrados. Chave: RA, Valor: {"nome": ..., "turma": ...}
-notas = {}          # Dicionário que guarda as notas dos alunos. Chave: RA, Valor: {"materia": media, ...}
-fila_alunos = deque()  # Fila para controlar a ordem dos alunos, útil para salvar na ordem de cadastro
+alunos = {}             # Dicionário que guarda os alunos cadastrados. Chave: RA, Valor: {"nome": ..., "turma": ...}
+notas = {}              # Dicionário que guarda as notas dos alunos. Chave: RA, Valor: {"materia": media, ...}
+fila_alunos = deque()   # Fila para controlar a ordem dos alunos, útil para salvar na ordem de cadastro
 ras_existentes = set()  # Conjunto que guarda os RAs existentes, garantindo que não haja duplicados
 
 # --------------------- CRIAÇÃO DE PASTAS --------------------- #
-PASTA_ARQUIVOS = "dados_escolares"  # Define o nome da pasta principal onde serão salvos arquivos de alunos e notas
+PASTA_ARQUIVOS = "dados_escolares"      # Define o nome da pasta principal onde serão salvos arquivos de alunos e notas
 if not os.path.exists(PASTA_ARQUIVOS):  # Verifica se a pasta já existe
     os.makedirs(PASTA_ARQUIVOS)         # Se não existir, cria a pasta
 
-PASTA_TURMAS = "turmas"  # Define a pasta onde cada turma terá seu arquivo separado
+PASTA_TURMAS = "turmas"               # Define a pasta onde cada turma terá seu arquivo separado
 if not os.path.exists(PASTA_TURMAS):  # Verifica se a pasta de turmas existe
     os.makedirs(PASTA_TURMAS)         # Cria a pasta caso não exista
 
@@ -114,7 +114,6 @@ def carregar_dados():
 # --------------------- FUNÇÃO PARA SALVAR DADOS --------------------- #
 def salvar_dados():
     # Monta o caminho completo do arquivo "alunos.txt" dentro da pasta PASTA_ARQUIVOS.
-    # IMPORTANTE: se PASTA_ARQUIVOS não existir, open(...) com "w" vai falhar; em produção convém garantir que a pasta exista (os.makedirs).
     arquivo_alunos = os.path.join(PASTA_ARQUIVOS, "alunos.txt")  # caminho do arquivo onde serão gravados os dados
 
     # Abre o arquivo em modo escrita ("w") com codificação UTF-8.
