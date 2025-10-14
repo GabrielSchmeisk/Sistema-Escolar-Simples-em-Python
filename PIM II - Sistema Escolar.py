@@ -21,13 +21,11 @@ if not os.path.exists(PASTA_TURMAS):  # Verifica se a pasta de turmas existe
     os.makedirs(PASTA_TURMAS)         # Cria a pasta caso não exista
 
 # --------------------- INICIA O PROGRAMA NO LOGIN DO PROFESSOR --------------------- #
-
 def main():
     if primeiro_acesso():
         menu_inicial()
 
 # --------------------- VALIDAÇÃO DE MATÉRIAS --------------------- #
-
 def obter_materias_validas():
     # Função que retorna uma lista com as matérias válidas do sistema
     return ["Matematica", "Portugues", "Historia", "Geografia"]
@@ -50,7 +48,6 @@ def sair():
     return ["sair", "sai", "sa", "voltar", "volta", "leave", "quit"]
 
 # --------------------- VALIDAÇÃO DE TURMAS --------------------- #
-
 def turmasfixas():
     # Função que retorna as turmas válidas
     return ["9A", "9B", "9C"]
@@ -78,10 +75,7 @@ def carregar_dados():
                     nome = partes[0].split(":", 1)[1].strip()
                     # "Aluno: Gabriel Schmeisk".split(":", 1)
                     # Resultado: ["Aluno", " Gabriel Schmeisk"]
-                
                     ra = partes[1].split(":", 1)[1].strip().upper()
-
-
                     turma = partes[2].split(":", 1)[1].strip()
 
                     # Salva os dados do aluno em um dicionário global chamado "alunos"
@@ -126,9 +120,6 @@ def carregar_dados():
 
     # Após carregar todos os alunos e suas notas, atualiza os arquivos de turmas
     salvar_turmas()
-
-
-
 
 # --------------------- FUNÇÃO PARA SALVAR DADOS --------------------- #
 def salvar_dados():
@@ -220,7 +211,6 @@ def salvar_dados():
                     f.write("❌ Nenhuma nota cadastrada nessa turma.\n")
                     f.write("-" * 60 + "\n")
 
-
      # ------------------- Cria arquivos separados por matéria -------------------
     # Aqui o sistema vai gerar um arquivo .txt para cada matéria cadastrada no sistema.
     # Exemplo: "matematica.txt", "portugues.txt", etc.
@@ -272,13 +262,11 @@ def salvar_dados():
     # Exibe no terminal uma mensagem de sucesso ao finalizar todo o processo
     print("\nBanco de dados atualizado com sucesso!!\n")
 
-
 # --------------------- FUNÇÃO PARA SALVAR TURMAS --------------------- #
 def salvar_turmas():
     # Cria a pasta de turmas, se não existir
     if not os.path.exists(PASTA_TURMAS):
         os.makedirs(PASTA_TURMAS)
-
     turmas = {}
 
     # Agrupa alunos existentes no dicionário "alunos"
@@ -287,7 +275,6 @@ def salvar_turmas():
         turma = dados["turma"].upper()
         # Usa setdefault para criar a lista se não existir e depois acrescenta uma tupla (ra, nome)
         turmas.setdefault(turma, []).append((ra, dados["nome"]))
-
 
     # Garante que todas as turmas fixas existam, mesmo sem alunos
     for turma in turmasfixas():
@@ -334,7 +321,6 @@ def salvar_turmas():
             if turma not in turmasfixas() and os.path.exists(caminho_arquivo):
                 os.remove(caminho_arquivo)
 
-
 # --------------------- FUNÇÃO PARA LISTAR ALUNOS --------------------- #
 def listar_alunos():
 
@@ -379,8 +365,6 @@ def listar_alunos():
     # Pausa para o usuário visualizar as informações
     input("Pressione qualquer tecla para continuar.")
     return
-
-
 
 # --------------------- FUNÇÃO PARA REMOVER ALUNOS --------------------- #
 def remover_alunos():
@@ -457,7 +441,6 @@ def remover_alunos():
             input("\n❌ Opção inválida, tente novamente!")
             # O loop continua automaticamente para tentar novamente
 
-
 # --------------------- FUNÇÃO PARA LIMPAR CONSOLE --------------------- #
 def limpar_console():
     os.system("cls" if os.name == "nt" else "clear")  # Comando para limpar tela no Windows ou Linux/Mac
@@ -528,7 +511,6 @@ def limpar_banco():
         # Chama a própria função novamente para permitir nova tentativa
         limpar_banco()
 
-
 # --------------------- FUNÇÃO PARA GERAR RA --------------------- #
 def gerar_ra():
     while True:  # Loop até gerar RA único
@@ -567,7 +549,6 @@ Por gentileza, insira sua senha abaixo.
 
     print("\n🚫 Acesso negado. Programa encerrado por segurança.\n")
     exit()  # bloqueia o acesso
-
     
 # --------------------- MENU PRINCIPAL --------------------- #
 
@@ -621,7 +602,6 @@ Escolha uma opção para executar:
     else:
         print("❌ Opção inválida! Tente novamente.")
         return
-
 
 # --------------------- REGISTRO DE ALUNOS --------------------- #
 def registrar_aluno():
@@ -690,7 +670,6 @@ def registrar_aluno():
         if menu.lower() in sair():  # Permite sair do cadastro
             limpar_console()
             break
-
 
 # --------------------- REGISTRO DE NOTAS --------------------- #
 def cadastrar_notas():
@@ -810,6 +789,21 @@ Aluno: {info['nome']} | Turma: {info['turma']} | RA: {ra}
             continue
 
         materia = materias[int(materia_input)]  # Seleciona matéria correta
+    
+        #  Verifica se já existe nota cadastrada
+        if ra in notas and materia in notas[ra]:
+            nota_existente = notas[ra][materia]
+            limpar_console()
+            print(f"\n⚠️  O aluno {alunos[ra]['nome']} já possui uma notas cadastradas em {materia} sua média é {nota_existente:.2f}")
+            opcao = input("Deseja substituir as notas existentes? (sim/não): ").strip().lower()
+
+            if opcao.lower() != "sim":
+                print("\n✅ Nota mantida sem alterações.")
+                input("\nPressione qualquer tecla para continuar!\n")
+                limpar_console()
+                continue  # Volta ao início do loop sem alterar a nota
+            else:
+                pass
 
         try:
             limpar_console()
@@ -902,12 +896,10 @@ def consultar_boletim():
         limpar_console()  # Limpa console após exibir boletim
 
 # --------------------- INICIA O PROGRAMA A PRIMEIRA VEZ NA MAIN --------------------- #
-
 if __name__ == "__main__":
     main()
 
 # --------------------- LOOP PRINCIPAL --------------------- #
-
 carregar_dados()
 salvar_turmas()  # só depois de carregar os alunos
 while True:
