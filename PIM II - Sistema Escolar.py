@@ -71,7 +71,6 @@ def carregar_dados():
                     partes = linha.split("|")  # Divide a linha em partes separadas pelo caractere "|"
 
                     # Divide o nome em 2 partes antes e depois do :
-
                     nome = partes[0].split(":", 1)[1].strip()
                     # "Aluno: Gabriel Schmeisk".split(":", 1)
                     # Resultado: ["Aluno", " Gabriel Schmeisk"]
@@ -132,7 +131,6 @@ def salvar_dados():
     with open(arquivo_alunos, "w", encoding="utf-8") as f:
         # Escreve um cabeçalho fixo de direitos e ano na primeira linha do arquivo.
         f.write("© Todos os direitos reservados TecMais LTDA - 2025\n")
-
         # Escreve uma linha separadora (60 sinais de "=") e pula uma linha.
         f.write("=" * 60 + "\n\n")
 
@@ -264,9 +262,6 @@ def salvar_dados():
 
 # --------------------- FUNÇÃO PARA SALVAR TURMAS --------------------- #
 def salvar_turmas():
-    # Cria a pasta de turmas, se não existir
-    if not os.path.exists(PASTA_TURMAS):
-        os.makedirs(PASTA_TURMAS)
     turmas = {}
 
     # Agrupa alunos existentes no dicionário "alunos"
@@ -358,11 +353,7 @@ def listar_alunos():
             # Exibe os dados do aluno e se a média está lançada
             print(f"Nome: {info['nome']} | RA: {ra} | Média Lançada: {notas_disponiveis}")
             print()
-
-    # Linha de separação no final da listagem
     print("=======================================\n")
-
-    # Pausa para o usuário visualizar as informações
     input("Pressione qualquer tecla para continuar.")
     return
 
@@ -372,7 +363,7 @@ def remover_alunos():
         # Cabeçalho da operação
         print("""
 =========================================
-       ❌ REMOVER ALUNO DO SISTEMA ❌
+    ❌ REMOVER ALUNO DO SISTEMA ❌
 =========================================
 """)
 
@@ -393,8 +384,8 @@ def remover_alunos():
         # Exibe os dados do aluno para confirmação antes da remoção
         print(f"""
 =========================================
-       ❌ REMOVER ALUNO DO SISTEMA ❌
-    Essa ação não poderá ser desfeita!
+    ❌ REMOVER ALUNO DO SISTEMA ❌
+   Essa ação não poderá ser desfeita!
 =========================================
 
 🧑 Nome : {alunos[ra]['nome']}
@@ -407,7 +398,7 @@ def remover_alunos():
         # Pergunta se o usuário confirma a exclusão
         confirmar = input(f"\nTem certeza que deseja remover {alunos[ra]['nome']} do sistema? (sim/não): ").strip().lower()
 
-        if confirmar == "sim":
+        if confirmar.lower() == "sim":
             # Senha fixa para permitir exclusão
             senha = input("Digite a senha para confirmar a exclusão do aluno: ").strip()
             if senha in senha_aluno():
@@ -430,7 +421,7 @@ def remover_alunos():
                 input("❌ Senha incorreta! Operação cancelada. Pressione qualquer tecla para retornar.")
                 return
 
-        elif confirmar == "não":
+        elif confirmar.lower() == "não":
             limpar_console()
             input("\n❌ Operação cancelada pelo usuário. Nenhum arquivo foi removido. Pressione qualquer tecla para continuar!")
             return
@@ -456,13 +447,10 @@ def limpar_banco():
 """)
 
     # Solicita confirmação do usuário antes de prosseguir
-    opcao_conf = input(
-        "❌ Tem certeza que deseja limpar todo o banco de dados? "
-        "Essa ação não poderá ser desfeita! (sim/não): "
-    ).strip()
+    confirmar = input("❌ Tem certeza que deseja limpar todo o banco de dados?\nEssa ação não poderá ser desfeita! (sim/não): ").strip()
 
     # Se o usuário confirma a operação
-    if opcao_conf.lower() == "sim":
+    if confirmar.lower() == "sim":
         # Solicita a senha para confirmar a exclusão
         senha = input("Digite a senha para confirmar a exclusão do banco de dados: ").strip()
 
@@ -499,7 +487,7 @@ def limpar_banco():
             return
 
     # Caso o usuário escolha "não" na confirmação inicial
-    elif opcao_conf.lower() == "não":
+    elif confirmar.lower() == "não":
         input("\n❌ Operação cancelada pelo usuário. Nenhum arquivo foi removido. Pressione qualquer tecla para continuar!")
         limpar_console()
         return
@@ -508,7 +496,6 @@ def limpar_banco():
     else:
         input("\n❌ Opção inválida, tente novamente!")
         limpar_console()
-        # Chama a própria função novamente para permitir nova tentativa
         limpar_banco()
 
 # --------------------- FUNÇÃO PARA GERAR RA --------------------- #
@@ -794,7 +781,7 @@ Aluno: {info['nome']} | Turma: {info['turma']} | RA: {ra}
         if ra in notas and materia in notas[ra]:
             nota_existente = notas[ra][materia]
             limpar_console()
-            print(f"\n⚠️  O aluno {alunos[ra]['nome']} já possui uma notas cadastradas em {materia} sua média é {nota_existente:.2f}")
+            print(f"\n⚠️  O aluno {alunos[ra]['nome']} já possui uma notas cadastradas sua média em {materia} é {nota_existente:.2f}")
             opcao = input("Deseja substituir as notas existentes? (sim/não): ").strip().lower()
 
             if opcao.lower() != "sim":
