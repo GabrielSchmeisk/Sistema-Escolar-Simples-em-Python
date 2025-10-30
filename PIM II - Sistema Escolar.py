@@ -781,7 +781,7 @@ Aluno: {info['nome']} | Turma: {info['turma']} | RA: {ra}
         if ra in notas and materia in notas[ra]:
             nota_existente = notas[ra][materia]
             limpar_console()
-            print(f"\n⚠️  O aluno {alunos[ra]['nome']} já possui uma notas cadastradas sua média em {materia} é {nota_existente:.2f}")
+            print(f"\n⚠️  O aluno {alunos[ra]['nome']} já possui notas cadastradas, sua média em {materia} é {nota_existente:.2f}")
             opcao = input("Deseja substituir as notas existentes? (sim/não): ").strip().lower()
 
             if opcao.lower() != "sim":
