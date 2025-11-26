@@ -44,7 +44,7 @@ def senha_professor():
 
 # --------------------- VALIDAÇÃO DE MATÉRIAS --------------------- #
 def sair():
-    # Função que retorna uma lista com as matérias válidas do sistema
+    # Função que retorna as opções válidas de saída
     return ["sair", "sai", "sa", "voltar", "volta", "leave", "quit"]
 
 # --------------------- VALIDAÇÃO DE TURMAS --------------------- #
@@ -892,3 +892,4 @@ salvar_turmas()  # só depois de carregar os alunos
 while True:
     limpar_console()
     menu_inicial()
+
