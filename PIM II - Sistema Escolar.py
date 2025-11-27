@@ -817,9 +817,9 @@ Aluno: {info['nome']} | Turma: {info['turma']} | RA: {ra}
             salvar_dados()  # Atualiza arquivo principal
             salvar_turmas()  # Atualiza arquivos de turmas
 
-            menu = input("\nPressione qualquer tecla para continuar!\n").strip()
-            if menu == "":
-                cadastrar_notas_individual(ra)  # Permite cadastrar outra nota
+            input("\nPressione qualquer tecla para continuar!\n")
+            limpar_console()
+            break  
 
 # --------------------- CONSULTAR BOLETIM --------------------- #
 def consultar_boletim():
