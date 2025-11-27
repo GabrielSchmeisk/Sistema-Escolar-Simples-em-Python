@@ -255,7 +255,7 @@ def salvar_dados():
                 f_mat.write("-" * 60 + "\n")
 
     # Exibe no terminal uma mensagem de sucesso ao finalizar todo o processo
-    print("\nBanco de dados atualizado com sucesso!!\n")
+    print("\nBanco de dados atualizado com sucesso!\n")
 
 # --------------------- FUNÇÃO PARA SALVAR TURMAS --------------------- #
 def salvar_turmas():
@@ -577,7 +577,7 @@ Escolha uma opção para executar:
 
     # Caso o usuário escolha a opção 7, o sistema será encerrado com salvamento dos dados
     elif opcao == "7":
-        input("Saindo do sistema...")
+        print("Saindo do sistema...")
         salvar_dados()            # Salva os dados dos alunos antes de sair
         salvar_turmas()           # Salva também as turmas antes de encerrar
         exit()
@@ -754,7 +754,7 @@ Escolha a matéria para o aluno:
 [2] ✏️  Português
 [3] 📜 História
 [4] 🌍 Geografia
-[5] 🔙 Retornar ao menu
+[5] 🔙 Retornar ao menu anterior
 
 -----------------------------------------
 Aluno: {info['nome']} | Turma: {info['turma']} | RA: {ra}
