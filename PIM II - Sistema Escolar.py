@@ -26,7 +26,6 @@ def main():
         # A função primeiro_acesso já carrega os dados
         salvar_turmas() # Atualiza arquivos de turma após o carregamento inicial
 
-        # ESTE É O ÚNICO LOOP PRINCIPAL NECESSÁRIO!
         while True:
             limpar_console()
             menu_inicial()
