@@ -605,7 +605,7 @@ def registrar_aluno():
         nome = input("🧑 Digite o nome do aluno (ou '0' para retornar ao menu): ").strip().title()  
         if nome.lower() in sair():  # Permite retornar ao menu principal
             limpar_console()
-            menu_inicial()  # Encerra a função e volta ao menu principal
+            return  # Encerra a função e volta ao menu principal
 
         if not nome.replace(" ", "").isalpha():  # Verifica se o nome contém apenas letras
             input("\n⚠️  Por favor, digite apenas letras.\nPressione qualquer tecla para continuar!\n")
@@ -626,7 +626,7 @@ def registrar_aluno():
         turma = input("🎓 Digite a turma do aluno (ou '0' para retornar ao menu): ").strip().upper()  
         if turma.lower() in sair():  # Permite retornar ao menu principal
             limpar_console()
-            menu_inicial()
+            return
 
         if turma not in turmasfixas():  # Verifica se a turma digitada é válida
             input(f"\n❌ Turma inválida! Disponíveis: {', '.join(turmasfixas())}\nPressione qualquer tecla para continuar!\n")
