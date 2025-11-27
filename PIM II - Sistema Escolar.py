@@ -254,8 +254,6 @@ def salvar_dados():
                 f_mat.write("❌ Nenhuma nota cadastrada para esta matéria.\n")
                 f_mat.write("-" * 60 + "\n")
 
-    # Exibe no terminal uma mensagem de sucesso ao finalizar todo o processo
-    print("\nBanco de dados atualizado com sucesso!\n")
 
 # --------------------- FUNÇÃO PARA SALVAR TURMAS --------------------- #
 def salvar_turmas():
@@ -414,19 +412,19 @@ def remover_alunos():
                 input("\n✅ Aluno removido com sucesso! Pressione qualquer tecla para retornar.")
                 return
             else:
-                limpar_console()
                 input("❌ Senha incorreta! Operação cancelada. Pressione qualquer tecla para retornar.")
+                limpar_console()
                 return
 
         elif confirmar.lower() == "não":
-            limpar_console()
             input("\n❌ Operação cancelada pelo usuário. Nenhum arquivo foi removido. Pressione qualquer tecla para continuar!")
+            limpar_console()
             return
 
         else:
             # Caso a opção digitada seja inválida
-            limpar_console()
             input("\n❌ Opção inválida, tente novamente!")
+            limpar_console()
             # O loop continua automaticamente para tentar novamente
 
 # --------------------- FUNÇÃO PARA LIMPAR CONSOLE --------------------- #
@@ -476,11 +474,13 @@ def limpar_banco():
 
             # Mensagem de sucesso no console
             input("\n✅ Banco de dados limpo com sucesso!\nPressione qualquer tecla para continuar!\n")
+            limpar_console()
             return
 
         else:
             # Caso a senha esteja incorreta, cancela a operação
             input("❌ Senha incorreta! Operação cancelada. Pressione qualquer tecla para continuar!")
+            limpar_console()
             return
 
     # Caso o usuário escolha "não" na confirmação inicial
@@ -556,7 +556,6 @@ Escolha uma opção para executar:
 """)  # Menu principal
     opcao = input("Opção: ").strip()  # Solicita escolha do usuário
     if not opcao.isdigit():  # Verifica se é número
-        limpar_console()
         input("❌ Opção inválida! Tente novamente.\nPressione qualquer tecla para continuar!\n")
         limpar_console()
         return
@@ -585,6 +584,7 @@ Escolha uma opção para executar:
     # Caso o usuário digite uma opção inválida (não existente)
     else:
         input("❌ Opção inválida! Tente novamente.\nPressione qualquer tecla para continuar!\n")
+        limpar_console()
         return
 
 # --------------------- REGISTRO DE ALUNOS --------------------- #
@@ -603,16 +603,19 @@ def registrar_aluno():
             break  # Encerra a função e volta ao menu principal
 
         if not nome.replace(" ", "").isalpha():  # Verifica se o nome contém apenas letras
-            limpar_console()
             input("\n⚠️  Por favor, digite apenas letras.\nPressione qualquer tecla para continuar!\n")
             limpar_console()
             continue  # Reinicia loop se o nome for inválido
 
         if len(nome.split()) < 2:
-            limpar_console()
             input("⚠️  Por favor, digite nome e sobrenome (ex: Gabriel Schmeisk)\nPressione qualquer tecla para continuar!\n")
             limpar_console()
             continue 
+        
+        if any(len(parte) < 3 for parte in nome.split()):
+            input("⚠️  Cada parte do nome deve ter pelo menos 3 caracteres.\nPressione qualquer tecla para continuar!\n")
+            limpar_console()
+            continue
 
         # --- Entrada e validação da turma ---
         turma = input("🎓 Digite a turma do aluno (ou '0' para retornar ao menu): ").strip().upper()  
@@ -621,7 +624,6 @@ def registrar_aluno():
             break
 
         if turma not in turmasfixas():  # Verifica se a turma digitada é válida
-            limpar_console()
             input(f"\n❌ Turma inválida! Disponíveis: {', '.join(turmasfixas())}\nPressione qualquer tecla para continuar!\n")
             limpar_console()
             continue  # Reinicia o loop se a turma não for válida
@@ -675,7 +677,6 @@ def cadastrar_notas():
         limpar_console()
         ra = input("Digite o RA do aluno: ").strip().upper()  # Solicita RA
         if ra not in alunos:  # Verifica se aluno existe
-            limpar_console()
             input("\n⚠️  Aluno não encontrado! Cadastre-o primeiro.\nPressione qualquer tecla para continuar!\n")
             limpar_console()
             return
@@ -686,15 +687,15 @@ def cadastrar_notas():
     elif escolha == "2":
         turmas_disponiveis = sorted({info["turma"] for info in alunos.values()})  # Lista turmas existentes
         if not turmas_disponiveis:  # Verifica se há alunos cadastrados
-            limpar_console()
             input("\n⚠️  Não há alunos cadastrados ainda.\nPressione qualquer tecla para continuar!\n")
+            limpar_console()
             return
         
+    
         limpar_console()
         print("\nTurmas disponíveis:", ", ".join(turmas_disponiveis))
         turma = input("Digite a turma desejada: ").strip().upper()  # Solicita turma
         if turma not in turmas_disponiveis:
-            limpar_console()
             input("\n❌ Turma inválida!\nPressione qualquer tecla para continuar!\n")
             cadastrar_notas()
         
@@ -717,8 +718,8 @@ def cadastrar_notas():
                 salvar_turmas()
                 return
             elif ra not in alunos_turma:  # Valida RA
-                limpar_console()
                 input("\n❌ RA inválido ou não pertence a essa turma.\nPressione qualquer tecla para continuar!\n")
+                limpar_console()
                 continue
             else:
                 limpar_console()
@@ -730,15 +731,15 @@ def cadastrar_notas():
         return
     
     else:
-        input("\nOpção inválida!\nPressione qualquer tecla para continuar!\n")
+        input("\n⚠️ Opção inválida!\nPressione qualquer tecla para continuar!\n")
         limpar_console()
         cadastrar_notas()  # Reinicia função se inválido
 
 # --------------------- FUNÇÃO AUXILIAR PARA CADASTRAR NOTAS --------------------- #
 def cadastrar_notas_individual(ra):
     if ra not in alunos:  # Verifica se RA existe
-        limpar_console()
         input("\n❌ RA não encontrado. Cadastre o aluno primeiro!\nPressione qualquer tecla para continuar!\n")
+        limpar_console()
         return
     
     while True:  # Loop para permitir cadastrar várias notas
@@ -799,7 +800,7 @@ Aluno: {info['nome']} | Turma: {info['turma']} | RA: {ra}
                     limpar_console()
                     continue
                 
-                n2 = float(input(f"Nota N2 de {materia}: "))  # Solicita nota 2
+                n2 = float(input(f"Nota N2 de {materia}: ")) # Solicita nota 2
                 if n2 < 0 or n2 > 10:  # Valida limite de nota
                     input("❌ Nota inválida, deve ser 0-10.\nPressione qualquer tecla para continuar!\n")
                     limpar_console()
@@ -813,11 +814,10 @@ Aluno: {info['nome']} | Turma: {info['turma']} | RA: {ra}
             if ra not in notas:
                 notas[ra] = {}  # Cria dicionário de notas se não existir
             notas[ra][materia] = media  # Salva nota
-            print(f"\nA média em {materia} do aluno {alunos[ra]['nome']} é: {media:.2f}")
+            print(f"\nA média em {materia} do aluno(a) {alunos[ra]['nome']} é: {media:.2f}")
             salvar_dados()  # Atualiza arquivo principal
             salvar_turmas()  # Atualiza arquivos de turmas
-
-            input("\nPressione qualquer tecla para continuar!\n")
+            input("Pressione qualquer tecla para continuar!\n")
             limpar_console()
             break  
 
