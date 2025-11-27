@@ -23,7 +23,13 @@ if not os.path.exists(PASTA_TURMAS):  # Verifica se a pasta de turmas existe
 # --------------------- INICIA O PROGRAMA NO LOGIN DO PROFESSOR --------------------- #
 def main():
     if primeiro_acesso():
-        menu_inicial()
+        # A função primeiro_acesso já carrega os dados
+        salvar_turmas() # Atualiza arquivos de turma após o carregamento inicial
+
+        # ESTE É O ÚNICO LOOP PRINCIPAL NECESSÁRIO!
+        while True:
+            limpar_console()
+            menu_inicial()
 
 # --------------------- VALIDAÇÃO DE MATÉRIAS --------------------- #
 def obter_materias_validas():
@@ -600,7 +606,7 @@ def registrar_aluno():
         nome = input("🧑 Digite o nome do aluno (ou '0' para retornar ao menu): ").strip().title()  
         if nome.lower() in sair():  # Permite retornar ao menu principal
             limpar_console()
-            break  # Encerra a função e volta ao menu principal
+            menu_inicial()  # Encerra a função e volta ao menu principal
 
         if not nome.replace(" ", "").isalpha():  # Verifica se o nome contém apenas letras
             input("\n⚠️  Por favor, digite apenas letras.\nPressione qualquer tecla para continuar!\n")
@@ -621,7 +627,7 @@ def registrar_aluno():
         turma = input("🎓 Digite a turma do aluno (ou '0' para retornar ao menu): ").strip().upper()  
         if turma.lower() in sair():  # Permite retornar ao menu principal
             limpar_console()
-            break
+            menu_inicial()
 
         if turma not in turmasfixas():  # Verifica se a turma digitada é válida
             input(f"\n❌ Turma inválida! Disponíveis: {', '.join(turmasfixas())}\nPressione qualquer tecla para continuar!\n")
@@ -659,9 +665,11 @@ def registrar_aluno():
 
 # --------------------- REGISTRO DE NOTAS --------------------- #
 def cadastrar_notas():
-    print("""
+    # Loop principal para manter o usuário no sub-menu de cadastro de notas
+    while True:
+        print("""
 =========================================
-     📝 OPÇÕES DE CADASTRO DE NOTAS
+      📝 OPÇÕES DE CADASTRO DE NOTAS
 =========================================
 
 [1] 💻 Cadastrar notas por RA
@@ -670,70 +678,86 @@ def cadastrar_notas():
 
 =========================================
 """)  # Menu de cadastro de notas
-    escolha = input("Escolha uma opção: ").strip()  # Solicita escolha
+        escolha = input("Escolha uma opção: ").strip()  # Solicita escolha
 
-    # ---------------- CADASTRAR POR RA ---------------- #
-    if escolha == "1":
-        limpar_console()
-        ra = input("Digite o RA do aluno: ").strip().upper()  # Solicita RA
-        if ra not in alunos:  # Verifica se aluno existe
-            input("\n⚠️  Aluno não encontrado! Cadastre-o primeiro.\nPressione qualquer tecla para continuar!\n")
+        # ---------------- CADASTRAR POR RA ---------------- #
+        if escolha == "1":
             limpar_console()
-            return
-        limpar_console()
-        cadastrar_notas_individual(ra)  # Chama função de cadastro individual
+            ra = input("Digite o RA do aluno: ").strip().upper()  # Solicita RA
+            
+            if ra not in alunos:  # Verifica se aluno existe
+                input("\n⚠️  Aluno não encontrado! Cadastre-o primeiro.\nPressione qualquer tecla para continuar!\n")
+                limpar_console()
+                continue # Volta ao menu [1], [2], [3] (tela anterior)
+            
+            limpar_console()
+            cadastrar_notas_individual(ra)  # Chama função de cadastro individual
+            
+            # Após o cadastro individual, volta para o menu [1], [2], [3] (tela anterior)
+            continue
 
-    # ---------------- CADASTRAR POR SALA ---------------- #
-    elif escolha == "2":
-        turmas_disponiveis = sorted({info["turma"] for info in alunos.values()})  # Lista turmas existentes
-        if not turmas_disponiveis:  # Verifica se há alunos cadastrados
-            input("\n⚠️  Não há alunos cadastrados ainda.\nPressione qualquer tecla para continuar!\n")
+        # ---------------- CADASTRAR POR SALA ---------------- #
+        elif escolha == "2":
+            turmas_disponiveis = sorted({info["turma"] for info in alunos.values()})  # Lista turmas existentes
+            
+            if not turmas_disponiveis:  # Verifica se há alunos cadastrados
+                input("\n⚠️  Não há alunos cadastrados ainda.\nPressione qualquer tecla para continuar!\n")
+                limpar_console()
+                return # Retorna ao menu principal
+            
             limpar_console()
-            return
+            print("\nTurmas disponíveis:", ", ".join(turmas_disponiveis))
+            turma = input("Digite a turma desejada: ").strip().upper()  # Solicita turma
+            
+
+            if turma not in turmas_disponiveis:
+                input("\n❌ Turma inválida!\nPressione qualquer tecla para continuar!\n")
+                limpar_console()
+                continue  # Volta ao menu
+            
+            alunos_turma = [ra for ra, info in alunos.items() if info["turma"] == turma]  # Filtra alunos da turma
+
+            while True:  # Loop para cadastrar notas de alunos da turma
+                limpar_console()
+                print(f"\nAlunos da turma {turma}:")
+                print("\n🧑 ALUNO              | 🆔 RA")
+                print("-" * 30) 
+
+                for ra in alunos_turma:
+                    nome = alunos[ra]['nome']
+                    print(f"➙  {nome:<20} | {ra}") # Deixa toda a coluna alinhada com menos de 20 caracteries
+
+                ra = input("\nDigite o RA do aluno que deseja cadastrar nota (ou '0' para retornar ao menu): ").strip().upper()
+                
+                if ra.lower() in sair():  # Permite sair do loop
+                    limpar_console()
+                    salvar_dados()
+                    salvar_turmas()
+                    break # Sai do while True interno
+                
+                elif ra not in alunos_turma:  # Valida RA
+                    input("\n❌ RA inválido ou não pertence a essa turma.\nPressione qualquer tecla para continuar!\n")
+                    limpar_console()
+                    continue
+                
+                else:
+                    limpar_console()
+                    cadastrar_notas_individual(ra)  # Chama função de cadastro individual
+            continue
+
+
+        # ---------------- VOLTAR AO MENU PRINCIPAL ---------------- #
+        elif escolha == "3":
+            limpar_console()
+            return  # Retorna ao menu principal
         
-    
-        limpar_console()
-        print("\nTurmas disponíveis:", ", ".join(turmas_disponiveis))
-        turma = input("Digite a turma desejada: ").strip().upper()  # Solicita turma
-        if turma not in turmas_disponiveis:
-            input("\n❌ Turma inválida!\nPressione qualquer tecla para continuar!\n")
-            cadastrar_notas()
-        
-        alunos_turma = [ra for ra, info in alunos.items() if info["turma"] == turma]  # Filtra alunos da turma
-
-        while True:  # Loop para cadastrar notas de alunos da turma
+        # ---------------- OPÇÃO INVÁLIDA ---------------- #
+        else:
+            input("\n❌ Opção inválida! Tente novamente.\nPressione qualquer tecla para continuar!\n")
             limpar_console()
-            print(f"\nAlunos da turma {turma}:")
-            print("\n🧑 ALUNO              | 🆔 RA")
-            print("-" * 30)  # Linha separadora opcional
+            continue  # Volta ao menu [1], [2], [3] (tela anterior)
 
-            for ra in alunos_turma:
-                nome = alunos[ra]['nome']
-                print(f"➙  {nome:<20} | {ra}") # Deixa toda a coluna alinhada com menos de 20 caracteries
-
-            ra = input("\nDigite o RA do aluno que deseja cadastrar nota (ou '0' para retornar ao menu): ").strip().upper()
-            if ra.lower() in sair():  # Permite sair do loop
-                limpar_console()
-                salvar_dados()
-                salvar_turmas()
-                return
-            elif ra not in alunos_turma:  # Valida RA
-                input("\n❌ RA inválido ou não pertence a essa turma.\nPressione qualquer tecla para continuar!\n")
-                limpar_console()
-                continue
-            else:
-                limpar_console()
-                cadastrar_notas_individual(ra)  # Chama função de cadastro individual
-
-    # ---------------- VOLTAR AO MENU ---------------- #
-    elif escolha == "3":
-        limpar_console()
-        return
-    
-    else:
-        input("\n❌ Opção inválida!\nPressione qualquer tecla para continuar!\n")
-        limpar_console()
-        cadastrar_notas()  # Reinicia função se inválido
+# A função cadastrar_notas_individual(ra) permanece inalterada pois seu fluxo já é interno.
 
 # --------------------- FUNÇÃO AUXILIAR PARA CADASTRAR NOTAS --------------------- #
 def cadastrar_notas_individual(ra):
@@ -891,9 +915,3 @@ if __name__ == "__main__":
     main()
 
 # --------------------- LOOP PRINCIPAL --------------------- #
-carregar_dados()
-salvar_turmas()  # só depois de carregar os alunos
-while True:
-    limpar_console()
-    menu_inicial()
-
