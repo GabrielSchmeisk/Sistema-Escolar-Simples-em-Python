@@ -731,7 +731,7 @@ def cadastrar_notas():
         return
     
     else:
-        input("\n⚠️ Opção inválida!\nPressione qualquer tecla para continuar!\n")
+        input("\n❌ Opção inválida!\nPressione qualquer tecla para continuar!\n")
         limpar_console()
         cadastrar_notas()  # Reinicia função se inválido
 
@@ -896,3 +896,4 @@ salvar_turmas()  # só depois de carregar os alunos
 while True:
     limpar_console()
     menu_inicial()
+
